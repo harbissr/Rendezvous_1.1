@@ -28,4 +28,5 @@ urlpatterns = [
     path("", root_view, name="root"),
     path("api/v1/admin/", admin.site.urls),
     path("api/v1/users/", include("user_app.urls")),
+    path("api/v1/events/", include("events_app.urls")),
 ]
