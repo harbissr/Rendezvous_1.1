@@ -3,14 +3,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Event, RSVP
 from .serializers import EventSerializer, RSVPSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR,
 )
+from .utils.eventbrite_api import EventbriteAPI
 
 
 # Create your views here.
@@ -108,3 +110,34 @@ class RSVPView(APIView):
             {"detail": "RSVP has been successfully cancelled."},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+class EventbriteSearchView(APIView):
+    """Search Eventbrite events"""
+
+    def get(self, request):
+        query = request.query_params.get("query", "")
+        location = request.query_params.get("location", "")
+        if not query or not location:
+            return Response(
+                {"error": "Both 'query' and 'location' are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            api = EventbriteAPI()
+            data = api.search_event(query, location)
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class EventbriteDetailView(APIView):
+    """Get Eventbrite event details"""
+
+    def get(self, request, event_id):
+        try:
+            api = EventbriteAPI()
+            data = api.get_event_details(event_id)
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
