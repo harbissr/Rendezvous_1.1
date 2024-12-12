@@ -12,7 +12,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
-from .utils.eventbrite_api import EventbriteAPI
+from eventbrite_app.views import EventbriteAPI
 
 
 # Create your views here.
