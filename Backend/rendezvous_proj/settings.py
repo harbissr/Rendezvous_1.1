@@ -32,6 +32,8 @@ load_dotenv()
 SECRET_KEY = env("SECRET_KEY")
 
 EVENTBRITE_API_KEY = os.getenv("EVENTBRITE_API_KEY")
+EVENTBRITE_CLIENT_SECRET = os.getenv("EVENTBRITE_CLIENT_SECRET")
+EVENTBRITE_REDIRECT_URI = os.getenv("EVENTBRITE_REDIRECT_URI")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
